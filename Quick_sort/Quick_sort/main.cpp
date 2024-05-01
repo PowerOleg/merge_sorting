@@ -1,7 +1,7 @@
 #include <iostream>
 
 void quick_sort(int* arr, int index1, int size);
-int pivoting(int* arr, int index1, int size, int pivot);
+int pivoting(int* arr, int index1, int size);
 
 
 void print(int* arr, int size)
@@ -15,11 +15,11 @@ void print(int* arr, int size)
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "ru");
-	int size1 = 4;
-	int* array1 = new int[size1] {3, 43, 38, 29/*, 18, 72, 57, 61, 2, 33*/};
+	int size1 = 10;
+	int* array1 = new int[size1] {3, 43, 38, 29, 18, 72, 57, 61, 2, 33};
 	std::cout << "»сходный массив: ";
 	print(array1, size1);
-	quick_sort(array1, 0, size1);
+	quick_sort(array1, 0, size1-1);
 	std::cout << "\nќтсортированный массив: ";
 	print(array1, size1);
 	delete[] array1;
@@ -28,19 +28,19 @@ int main(int argc, char** argv)
 
 void quick_sort(int* arr, int index1, int size)
 {
-	if ((size - index1) == 1)
+	if ((size - index1) <= 1)
 	{
 		return;
 	}
-	int pivot = arr[(size - index1) / 2];
-	int border = pivoting(arr, index1, size, pivot);//дл€ диапазона массива от 2 до 4 граница должна быть 3 а тут 2
+	//int pivot = arr[(size - index1) / 2];
+	int border = pivoting(arr, index1, size);//дл€ диапазона массива от 2 до 4 граница должна быть 3 а тут 2
 
 	quick_sort(arr, index1, border);
 	quick_sort(arr, border, size);
 }
 
 
-int pivoting(int* arr, int index1, int size, int pivot)
+/*int pivoting(int* arr, int index1, int size, int pivot)
 {
 	int left_count = index1;
 	int right_count = size - 1;
@@ -70,4 +70,39 @@ int pivoting(int* arr, int index1, int size, int pivot)
 		right_count--;
 	}
 	return 0;
+}
+*/
+int pivoting(int* arr, int l, int r)
+{
+	int left = l; int right = r;
+	int pivot = l;
+	bool go_left = true;
+	bool go_right = false;
+	while (left < right)
+	{
+		if (arr[right] <= arr[pivot] && go_left) {
+			std::swap(arr[right], arr[pivot]);
+			pivot = right;
+			left++;
+			go_left = false;
+			go_right = true;
+		}
+		else if (go_left)
+		{
+			right--;
+		}
+		if (arr[left] > arr[pivot] && go_right)
+		{
+			std::swap(arr[left], arr[pivot]);
+			pivot = left;
+			right--;
+			go_left = true;
+			go_right = false;
+		}
+		else if (go_right)
+		{
+			left++;
+		}
+	}
+	return pivot;
 }
